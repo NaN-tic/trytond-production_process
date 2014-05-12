@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<!-- The COPYRIGHT file at the top level of this repository contains the full
+     copyright notices and license terms. -->
+<tree string="Product - Process" sequence="sequence">
+    <field name="process"/>
+    <field name="sequence" tree_invisible="1"/>
+</tree>

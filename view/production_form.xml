@@ -1,0 +1,6 @@
+<data>
+    <xpath expr="/form/label[@name='bom']" position="before">
+        <label name="process"/>
+        <field name="process"/>
+    </xpath>
+</data>

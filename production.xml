@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tryton>
+    <data>
+
+        <record model="ir.ui.view" id="production_process_view_form">
+            <field name="model">production.process</field>
+            <field name="type">form</field>
+            <field name="name">production_process_form</field>
+        </record>
+        <record model="ir.ui.view" id="production_process_view_list">
+            <field name="model">production.process</field>
+            <field name="type">tree</field>
+            <field name="name">production_process_list</field>
+        </record>
+        <record model="ir.action.act_window" id="act_production_process">
+            <field name="name">Production Process</field>
+            <field name="res_model">production.process</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_production_process_view1">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="production_process_view_list"/>
+            <field name="act_window" ref="act_production_process"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_production_process_view2">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="production_process_view_form"/>
+            <field name="act_window" ref="act_production_process"/>
+        </record>
+        <record model="ir.model.access" id="access_production_process">
+            <field name="model" search="[('model', '=', 'production.process')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_production_process_admin">
+            <field name="model" search="[('model', '=', 'production.process')]"/>
+            <field name="group" ref="production.group_production_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+        <record model="ir.ui.view" id="production_process_step_view_form">
+            <field name="model">production.process.step</field>
+            <field name="type">form</field>
+            <field name="name">production_process_step_form</field>
+        </record>
+        <record model="ir.ui.view" id="production_process_step_view_list">
+            <field name="model">production.process.step</field>
+            <field name="type">tree</field>
+            <field name="name">production_process_step_list</field>
+        </record>
+        <record model="ir.action.act_window" id="act_production_process_step">
+            <field name="name">Production Process Step</field>
+            <field name="res_model">production.process.step</field>
+        </record>
+        <record model="ir.action.act_window.view"
+                id="act_production_process_step_view1">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="production_process_step_view_list"/>
+            <field name="act_window" ref="act_production_process_step"/>
+        </record>
+        <record model="ir.action.act_window.view"
+                id="act_production_process_step_view2">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="production_process_step_view_form"/>
+            <field name="act_window" ref="act_production_process_step"/>
+        </record>
+        <record model="ir.model.access" id="access_production_process_step">
+            <field name="model" search="[('model', '=', 'production.process.step')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_production_process_step_admin">
+            <field name="model" search="[('model', '=', 'production.process.step')]"/>
+            <field name="group" ref="production.group_production_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+
+        <!-- bom -->
+        <record model="ir.ui.view" id="production_view_form">
+            <field name="model">production</field>
+            <field name="type">form</field>
+            <field name="name">production_form</field>
+            <field name="inherit" ref="production.production_view_form"/>
+        </record>
+        <record model="ir.ui.view" id="bom_input_view_list">
+            <field name="model">production.bom.input</field>
+            <field name="type">tree</field>
+            <field name="inherit" ref="production.bom_input_view_list"/>
+            <field name="name">bom_input_list</field>
+        </record>
+        <record model="ir.ui.view" id="bom_input_view_form">
+            <field name="model">production.bom.input</field>
+            <field name="type">form</field>
+            <field name="inherit" ref="production.bom_input_view_form"/>
+            <field name="name">bom_input_form</field>
+        </record>
+
+        <record model="ir.ui.view" id="bom_output_view_list">
+            <field name="model">production.bom.output</field>
+            <field name="type">tree</field>
+            <field name="inherit" ref="production.bom_output_view_list"/>
+            <field name="name">bom_output_list</field>
+        </record>
+        <record model="ir.ui.view" id="bom_output_view_form">
+            <field name="model">production.bom.output</field>
+            <field name="type">form</field>
+            <field name="inherit" ref="production.bom_output_view_form"/>
+            <field name="name">bom_output_form</field>
+        </record>
+
+        <!-- Menus -->
+        <menuitem action="act_production_process" id="menu_production_process"
+            parent="production.menu_configuration" sequence="1"
+            name="Processes"/>
+    </data>
+</tryton>
