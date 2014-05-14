@@ -20,7 +20,7 @@ msgstr ""
 
 msgctxt "field:production,process:"
 msgid "Process"
-msgstr "Processa"
+msgstr "Procés"
 
 msgctxt "field:production.bom.input,step:"
 msgid "Step"
