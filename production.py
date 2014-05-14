@@ -248,6 +248,7 @@ class Production:
 
     @classmethod
     def compute_request(cls, product, warehouse, quantity, date, company):
+        "Inherited from stock_supply_production"
         production = super(Production, cls).compute_request(product,
             warehouse, quantity, date, company)
         if product.boms:
