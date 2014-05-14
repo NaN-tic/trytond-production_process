@@ -7,10 +7,6 @@
     <newline/>
     <label name="name"/>
     <field name="name"/>
-    <label name="bom"/>
-    <field name="bom"/>
-    <label name="route"/>
-    <field name="route"/>
     <notebook colspan="4">
         <page string="Description" id="description">
             <field name="description" colspan="4"/>

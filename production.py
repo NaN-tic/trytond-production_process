@@ -18,9 +18,12 @@ class Process(ModelSQL, ModelView):
     bom = fields.Many2One('production.bom', 'BOM', required=True)
     route = fields.Many2One('production.route', 'Route', required=True)
     inputs = fields.Function(fields.One2Many('production.bom.input', None,
-            'Inputs'), 'get_inputs')
+            'Inputs'), 'get_bom_field')
     outputs = fields.Function(fields.One2Many('production.bom.output', None,
-            'Outputs'), 'get_outputs')
+            'Outputs'), 'get_bom_field')
+    output_products = fields.Function(fields.Many2Many('production.bom.output',
+            'bom', 'product', 'Outputs'), 'get_bom_field',
+        searcher='search_bom_field')
     operations = fields.Function(fields.One2Many('production.route.operation',
             None, 'Operations'), 'get_operations')
     uom = fields.Many2One('product.uom', 'UOM', required=True)
@@ -30,16 +33,10 @@ class Process(ModelSQL, ModelView):
     def default_active():
         return True
 
-    def get_inputs(self, name):
+    def get_bom_field(self, name):
         res = []
         if self.bom:
-            res += [x.id for x in self.bom.inputs]
-        return res
-
-    def get_outputs(self, name):
-        res = []
-        if self.bom:
-            res += [x.id for x in self.bom.outputs]
+            res += [x.id for x in getattr(self.bom, name)]
         return res
 
     def get_operations(self, name):
@@ -47,6 +44,10 @@ class Process(ModelSQL, ModelView):
         if self.route:
             res += [x.id for x in self.route.operations]
         return res
+
+    @classmethod
+    def search_bom_field(cls, name, clause):
+        return [tuple(('bom.' + name,)) + tuple(clause[1:])]
 
     @classmethod
     def create(cls, vlist):

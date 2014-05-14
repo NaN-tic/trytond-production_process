@@ -30,7 +30,12 @@ class Product:
 class ProductBom:
     __name__ = 'product.product-production.bom'
 
-    process = fields.Many2One('production.process', 'Process')
+    process = fields.Many2One('production.process', 'Process',
+        select=True, domain=[
+            ('output_products', '=', If(Bool(Eval('product')),
+                    Eval('product', 0),
+                    Get(Eval('_parent_product', {}), 'id', 0))),
+            ], depends=['product'])
 
     @classmethod
     def create(cls, vlist):

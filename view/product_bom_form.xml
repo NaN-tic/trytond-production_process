@@ -3,7 +3,7 @@
      copyright notices and license terms. -->
 <form string="Product - Process" col="4">
     <label name="process"/>
-    <field name="process"/>
+    <field name="process" widget="selection"/>
     <label name="sequence"/>
     <field name="sequence"/>
 </form>
