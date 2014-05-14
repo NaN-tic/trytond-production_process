@@ -30,7 +30,6 @@ msgctxt "field:production.bom.output,step:"
 msgid "Step"
 msgstr "Paso"
 
-#, fuzzy
 msgctxt "field:production.process,active:"
 msgid "Active"
 msgstr "Activo"
