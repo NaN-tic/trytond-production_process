@@ -1,9 +1,10 @@
 <?xml version="1.0"?>
 <!-- The COPYRIGHT file at the top level of this repository contains the full
      copyright notices and license terms. -->
-<form string="Product - Process" col="4">
-    <label name="process"/>
-    <field name="process" widget="selection"/>
-    <label name="sequence"/>
-    <field name="sequence"/>
-</form>
+<data>
+    <xpath expr="/form/label[@name='bom']" position="before">
+        <newline/>
+        <label name="process"/>
+        <field name="process"/>
+    </xpath>
+</data>

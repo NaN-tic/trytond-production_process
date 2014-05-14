@@ -4,27 +4,8 @@ from trytond.model import fields
 from trytond.pyson import Eval, Get, If, Bool
 from trytond.pool import Pool, PoolMeta
 
-__all__ = ['Product', 'ProductBom']
+__all__ = ['ProductBom']
 __metaclass__ = PoolMeta
-
-
-class Product:
-    __name__ = 'product.product'
-
-    processes = fields.One2Many('product.product-production.bom', 'product',
-        'Processes', order=[('sequence', 'ASC'), ('id', 'ASC')],
-        states={
-            'invisible': Eval('type', 'service') == 'service',
-            },
-        depends=['type'])
-
-    @classmethod
-    def copy(cls, products, default=None):
-        if default is None:
-            default = {}
-        default = default.copy()
-        default.setdefault('processes', None)
-        return super(Product, cls).copy(products, default=default)
 
 
 class ProductBom:

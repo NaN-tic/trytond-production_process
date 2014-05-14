@@ -15,6 +15,5 @@ def register():
         Route,
         BOM,
         Production,
-        Product,
         ProductBom,
         module='production_process', type_='model')
