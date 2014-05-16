@@ -204,16 +204,17 @@ Create a process definition::
     >>> len(process.route.operations) == 2
     True
     >>> bom = process.bom
-    >>> len(bom.inputs) == 2
-    True
-    >>> len(bom.outputs) == 1
-    True
+    >>> route = process.route
     >>> ProductBom = Model.get('product.product-production.bom')
-    >>> product.processes.append(ProductBom(process=process))
+    >>> product_bom = ProductBom()
+    >>> product.boms.append(product_bom)
+    >>> product_bom.process = process
+    >>> product_bom.bom == bom
+    True
+    >>> product_bom.route == route
+    True
     >>> product.save()
     >>> len(product.boms) == 1
-    True
-    >>> product.boms[0].bom == bom
     True
 
 Create an Inventory::

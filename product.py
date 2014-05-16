@@ -16,7 +16,29 @@ class ProductBom:
             ('output_products', '=', If(Bool(Eval('product')),
                     Eval('product', 0),
                     Get(Eval('_parent_product', {}), 'id', 0))),
-            ], depends=['product'])
+            ],
+        depends=['product'], on_change=['process', 'bom', 'route'])
+
+    @classmethod
+    def __setup__(cls):
+        super(ProductBom, cls).__setup__()
+        if not 'process' in cls.bom.depends:
+            cls.bom.states.update({
+                    'readonly': Bool(Eval('process', 0)),
+                    })
+            cls.bom.depends.append('process')
+        if not 'process' in cls.route.depends:
+            cls.route.states.update({
+                    'readonly': Bool(Eval('process', 0)),
+                    })
+            cls.route.depends.append('process')
+
+    def on_change_process(self):
+        res = {}
+        if self.process:
+            res['bom'] = self.process.bom.id
+            res['route'] = self.process.route.id
+        return res
 
     @classmethod
     def create(cls, vlist):

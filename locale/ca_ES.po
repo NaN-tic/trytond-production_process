@@ -18,6 +18,10 @@ msgstr ""
 "La ruta \"%(bom)s\" no es pot eliminar perquè ha estat creada pel process "
 "\"%(process)s\"."
 
+msgctxt "field:product.product-production.bom,process:"
+msgid "Process"
+msgstr "Procés"
+
 msgctxt "field:production,process:"
 msgid "Process"
 msgstr "Procés"
@@ -61,6 +65,10 @@ msgstr "Nom"
 msgctxt "field:production.process,operations:"
 msgid "Operations"
 msgstr "Operacions"
+
+msgctxt "field:production.process,output_products:"
+msgid "Outputs"
+msgstr "Sortides"
 
 msgctxt "field:production.process,outputs:"
 msgid "Outputs"
