@@ -218,8 +218,7 @@ class Route:
 class Production:
     __name__ = 'production'
 
-    process = fields.Many2One('production.process', 'Process',
-        on_change=BOM_CHANGES + ['process', 'route', 'operations'])
+    process = fields.Many2One('production.process', 'Process')
 
     @classmethod
     def __setup__(cls):
@@ -235,6 +234,7 @@ class Production:
                 })
         cls.route.depends.append('process')
 
+    @fields.depends(*(BOM_CHANGES + ['process', 'route', 'operations']))
     def on_change_process(self):
         res = {}
         if self.process:
