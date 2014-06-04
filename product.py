@@ -17,7 +17,7 @@ class ProductBom:
                     Eval('product', 0),
                     Get(Eval('_parent_product', {}), 'id', 0))),
             ],
-        depends=['product'], on_change=['process', 'bom', 'route'])
+        depends=['product'])
 
     @classmethod
     def __setup__(cls):
@@ -33,6 +33,7 @@ class ProductBom:
                     })
             cls.route.depends.append('process')
 
+    @fields.depends('process', 'bom', 'route')
     def on_change_process(self):
         res = {}
         if self.process:
