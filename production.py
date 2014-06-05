@@ -3,6 +3,7 @@ from trytond.model import ModelSQL, ModelView, fields
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Bool, Eval
 from trytond.modules.production.production import BOM_CHANGES
+from trytond.transaction import Transaction
 
 
 __all__ = ['Process', 'Step', 'BOMInput', 'BOMOutput', 'Operation', 'BOM',
@@ -14,7 +15,10 @@ class Process(ModelSQL, ModelView):
     'Production Process'
     __name__ = 'production.process'
     name = fields.Char('Name', required=True)
-    steps = fields.One2Many('production.process.step', 'process', 'Steps')
+    steps = fields.One2Many('production.process.step', 'process', 'Steps',
+        context={
+            'from_process': Eval('id'),
+            },)
     bom = fields.Many2One('production.bom', 'BOM', required=True)
     route = fields.Many2One('production.route', 'Route', required=True)
     inputs = fields.Function(fields.One2Many('production.bom.input', None,
@@ -115,7 +119,10 @@ class Step(ModelSQL, ModelView):
     inputs = fields.One2Many('production.bom.input', 'step', 'Inputs')
     outputs = fields.One2Many('production.bom.output', 'step', 'Outputs')
     operations = fields.One2Many('production.route.operation', 'step',
-        'Operations')
+        'Operations',
+        context={
+            'from_step': Eval('id'),
+            },)
 
     @classmethod
     def __setup__(cls):
@@ -154,6 +161,19 @@ class Operation:
     step = fields.Many2One('production.process.step', 'Step')
 
     @classmethod
+    def __setup__(cls):
+        super(Operation, cls).__setup__()
+        if not cls.route.states:
+            cls.route.states = {}
+        new_invisible = Eval('context', {}).get('from_step', 0) != 0
+        old_invisible = cls.route.states.get('invisible')
+        if old_invisible:
+            new_invisible = new_invisible | old_invisible
+        cls.route.states.update({
+                'invisible': new_invisible,
+                })
+
+    @classmethod
     def create(cls, vlist):
         pool = Pool()
         Step = pool.get('production.process.step')
@@ -161,6 +181,23 @@ class Operation:
             if not values.get('route') and values.get('step'):
                 values['route'] = Step(values['step']).process.route.id
         return super(Operation, cls).create(vlist)
+
+    @staticmethod
+    def default_route():
+        pool = Pool()
+        Process = pool.get('production.process')
+        Step = pool.get('production.process.step')
+
+        process_id = Transaction().context.get('from_process')
+        if process_id and process_id > 0:
+            process = Process(process_id)
+            return process.route.id
+
+        step_id = Transaction().context.get('from_step')
+        if step_id and step_id > 0:
+            step = Step(step_id)
+            if step.process:
+                return step.process.route.id
 
 
 class BOM:
