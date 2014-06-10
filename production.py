@@ -255,7 +255,11 @@ class Route:
 class Production:
     __name__ = 'production'
 
-    process = fields.Many2One('production.process', 'Process')
+    process = fields.Many2One('production.process', 'Process',
+        domain=[
+            ('output_products', '=', Eval('product', 0)),
+            ],
+        depends=['product'])
 
     @classmethod
     def __setup__(cls):
