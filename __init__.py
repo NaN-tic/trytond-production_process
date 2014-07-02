@@ -16,4 +16,5 @@ def register():
         BOM,
         Production,
         ProductBom,
+        StockMove,
         module='production_process', type_='model')

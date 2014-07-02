@@ -7,7 +7,7 @@ from trytond.transaction import Transaction
 
 
 __all__ = ['Process', 'Step', 'BOMInput', 'BOMOutput', 'Operation', 'BOM',
-    'Route', 'Production']
+    'Route', 'Production', 'StockMove']
 __metaclass__ = PoolMeta
 
 
@@ -295,3 +295,16 @@ class Production:
         if product.boms:
             production.process = product.boms[0].process
         return production
+
+    def _explode_move_values(self, from_location, to_location, company,
+            bom_io, quantity):
+        res = super(Production, self)._explode_move_values(from_location,
+            to_location, company, bom_io, quantity)
+        res['production_step'] = bom_io.step.id if bom_io.step else None
+        return res
+
+
+class StockMove:
+    __name__ = 'stock.move'
+
+    production_step = fields.Many2One('production.process.step', 'Process')
