@@ -259,7 +259,12 @@ class Production:
         domain=[
             ('output_products', '=', Eval('product', 0)),
             ],
-        depends=['product'])
+        states={
+            'readonly': (~Eval('state').in_(['request', 'draft'])
+                | ~Eval('warehouse', 0) | ~Eval('location', 0)),
+            'invisible': ~Eval('product'),
+            },
+        depends=['product', 'state', 'warehouse', 'location'])
 
     @classmethod
     def __setup__(cls):
