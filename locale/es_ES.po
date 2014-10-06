@@ -164,7 +164,7 @@ msgstr "Paso de proceso de producción"
 
 msgctxt "model:ir.ui.menu,name:menu_production_process"
 msgid "Processes"
-msgstr "Processos"
+msgstr "Procesos"
 
 msgctxt "model:production.process,name:"
 msgid "Production Process"
