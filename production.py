@@ -84,16 +84,16 @@ class Process(ModelSQL, ModelView):
         return super(Process, cls).create(with_boms + without_boms)
 
     @classmethod
-    def delete(cls, steps):
+    def delete(cls, processes):
         pool = Pool()
         BOM = pool.get('production.bom')
         Route = pool.get('production.route')
         boms = []
         routes = []
-        for step in steps:
-            boms.append(step.bom)
-            routes.append(step.route)
-        super(Process, cls).delete(steps)
+        for process in processes:
+            boms.append(process.bom)
+            routes.append(process.route)
+        super(Process, cls).delete(processes)
         BOM.delete(boms)
         Route.delete(routes)
 
@@ -107,6 +107,52 @@ class Process(ModelSQL, ModelView):
             factor = step.bom.compute_factor(product, quantity, uom)
             if factor is not None:
                 return factor
+
+    @classmethod
+    def copy(cls, processes, default=None):
+
+        def update_steps(old_lines, new_steps, new_lines):
+            old_map = {}
+            for line in old_lines:
+                old_map[line.product.id] = line.step.name
+            new_map = {}
+            for step in new_steps:
+                new_map[step.name] = step.id
+            for line in new_lines:
+                line.step = new_map[old_map[line.product.id]]
+                line.save()
+
+        pool = Pool()
+        BOM = pool.get('production.bom')
+        Route = pool.get('production.route')
+        if default is None:
+            default = {}
+        #for process in processes:
+        #if 'bom' not in default:
+        #    default['bom'] = None
+        #if 'route' not in default:
+        #    default['route'] = None
+        #return super(Process, cls).copy(processes, default)
+
+        res = []
+        for process in processes:
+            bom, = BOM.copy([process.bom])
+            for line in process.bom.inputs:
+
+            route, = Route.copy([process.route])
+            if 'bom' not in default:
+                default['bom'] = bom
+            if 'route' not in default:
+                default['route'] = route
+            new, = super(Process, cls).copy([process], default)
+            res.append(new)
+
+            update_steps(process.bom.inputs, new.steps, new.bom.inputs)
+            update_steps(process.bom.outputs, new.steps, new.bom.outputs)
+
+
+#        print "DEFAULTING: ", default
+        return res
 
 
 class Step(ModelSQL, ModelView):
@@ -133,6 +179,15 @@ class Step(ModelSQL, ModelView):
     def order_sequence(tables):
         table, _ = tables[None]
         return [table.sequence == None, table.sequence]
+
+    @classmethod
+    def copy(cls, steps, default=None):
+        if default is None:
+            default = {}
+        default['inputs'] = None
+        default['outputs'] = None
+        default['operations'] = None
+        return super(Step, cls).copy(steps, default)
 
 
 class BOMMixin:
