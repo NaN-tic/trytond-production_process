@@ -137,8 +137,6 @@ class Process(ModelSQL, ModelView):
         res = []
         for process in processes:
             bom, = BOM.copy([process.bom])
-            for line in process.bom.inputs:
-
             route, = Route.copy([process.route])
             if 'bom' not in default:
                 default['bom'] = bom
