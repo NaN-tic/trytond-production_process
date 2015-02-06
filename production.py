@@ -313,8 +313,7 @@ class Production:
             ('output_products', '=', Eval('product', 0)),
             ],
         states={
-            'readonly': (~Eval('state').in_(['request', 'draft'])
-                | ~Eval('warehouse', 0) | ~Eval('location', 0)),
+            'readonly': ~Eval('state').in_(['request', 'draft']),
             'invisible': ~Eval('product'),
             },
         depends=['product', 'state', 'warehouse', 'location'])
