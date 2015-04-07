@@ -112,6 +112,39 @@ class Process(ModelSQL, ModelView):
         return res
 
     @classmethod
+    def write(cls, *args):
+        pool = Pool()
+        BOM = pool.get('production.bom')
+        Route = pool.get('production.route')
+
+        bom_args = []
+        route_args = []
+        actions = iter(args)
+        for processes, values in zip(actions, actions):
+            if values.get('name'):
+                new_values = {
+                    'name': values['name']
+                    }
+
+                if values.get('bom'):
+                    bom_args.extend(([BOM(values['bom'])], new_values))
+                else:
+                    for process in processes:
+                        bom_args.extend(([process.bom], new_values))
+
+                if values.get('route'):
+                    route_args.extend(([Route(values['route'])], new_values))
+                else:
+                    for process in processes:
+                        route_args.extend(([process.route], new_values))
+
+        super(Process, cls).write(*args)
+        if bom_args:
+            BOM.write(*bom_args)
+        if route_args:
+            Route.write(*route_args)
+
+    @classmethod
     def delete(cls, processes):
         pool = Pool()
         BOM = pool.get('production.bom')
