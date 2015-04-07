@@ -53,11 +53,23 @@ class Process(ModelSQL, ModelView):
     def search_bom_field(cls, name, clause):
         return [tuple(('bom.' + name,)) + tuple(clause[1:])]
 
+    def compute_factor(self, product, quantity, uom):
+        '''
+        Compute factor for an output product
+        '''
+        # TODO: Support that the same product is set as output of more
+        # than one step
+        for step in self.steps:
+            factor = step.bom.compute_factor(product, quantity, uom)
+            if factor is not None:
+                return factor
+
     @classmethod
     def create(cls, vlist):
         pool = Pool()
         BOM = pool.get('production.bom')
         Route = pool.get('production.route')
+
         boms_to_create = []
         routes_to_create = []
         with_boms = []
@@ -84,6 +96,22 @@ class Process(ModelSQL, ModelView):
         return super(Process, cls).create(with_boms + without_boms)
 
     @classmethod
+    def copy(cls, processes, default=None):
+        if default is None:
+            default = {}
+        else:
+            default = default.copy()
+        default['bom'] = None
+        default['route'] = None
+
+        res = []
+        for process in processes:
+            local_default = default.copy()
+            local_default['name'] = '%s (*)' % process.name
+            res += super(Process, cls).copy([process], default=local_default)
+        return res
+
+    @classmethod
     def delete(cls, processes):
         pool = Pool()
         BOM = pool.get('production.bom')
@@ -96,61 +124,6 @@ class Process(ModelSQL, ModelView):
         super(Process, cls).delete(processes)
         BOM.delete(boms)
         Route.delete(routes)
-
-    def compute_factor(self, product, quantity, uom):
-        '''
-        Compute factor for an output product
-        '''
-        # TODO: Support that the same product is set as output of more
-        # than one step
-        for step in self.steps:
-            factor = step.bom.compute_factor(product, quantity, uom)
-            if factor is not None:
-                return factor
-
-    @classmethod
-    def copy(cls, processes, default=None):
-
-        def update_steps(old_lines, new_steps, new_lines):
-            old_map = {}
-            for line in old_lines:
-                old_map[line.product.id] = line.step.name
-            new_map = {}
-            for step in new_steps:
-                new_map[step.name] = step.id
-            for line in new_lines:
-                line.step = new_map[old_map[line.product.id]]
-                line.save()
-
-        pool = Pool()
-        BOM = pool.get('production.bom')
-        Route = pool.get('production.route')
-        if default is None:
-            default = {}
-        #for process in processes:
-        #if 'bom' not in default:
-        #    default['bom'] = None
-        #if 'route' not in default:
-        #    default['route'] = None
-        #return super(Process, cls).copy(processes, default)
-
-        res = []
-        for process in processes:
-            bom, = BOM.copy([process.bom])
-            route, = Route.copy([process.route])
-            if 'bom' not in default:
-                default['bom'] = bom
-            if 'route' not in default:
-                default['route'] = route
-            new, = super(Process, cls).copy([process], default)
-            res.append(new)
-
-            update_steps(process.bom.inputs, new.steps, new.bom.inputs)
-            update_steps(process.bom.outputs, new.steps, new.bom.outputs)
-
-
-#        print "DEFAULTING: ", default
-        return res
 
 
 class Step(ModelSQL, ModelView):
@@ -180,12 +153,36 @@ class Step(ModelSQL, ModelView):
 
     @classmethod
     def copy(cls, steps, default=None):
+        pool = Pool()
+        BOMInput = pool.get('production.bom.input')
+        BOMOutput = pool.get('production.bom.output')
+        Operation = pool.get('production.route.operation')
+
         if default is None:
             default = {}
+        else:
+            default = default.copy()
         default['inputs'] = None
         default['outputs'] = None
         default['operations'] = None
-        return super(Step, cls).copy(steps, default)
+
+        res = []
+        for step in steps:
+            new_step, = super(Step, cls).copy([step], default=default)
+            BOMInput.copy(step.inputs, {
+                    'step': new_step.id,
+                    'bom': new_step.process.bom.id,
+                    })
+            BOMOutput.copy(step.outputs, {
+                    'step': new_step.id,
+                    'bom': new_step.process.bom.id,
+                    })
+            Operation.copy(step.operations, {
+                    'step': new_step.id,
+                    'route': new_step.process.route.id,
+                    })
+            res.append(new_step)
+        return res
 
 
 class BOMMixin:
@@ -271,7 +268,6 @@ class BOM:
         processes = Process.search([('bom', 'in', [x.id for x in boms])],
             limit=1)
         if processes:
-            process, = processes
             cls.raise_user_error('cannot_delete_with_process', {
                     'bom': processes[0].bom.rec_name,
                     'process': processes[0].rec_name,
