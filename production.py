@@ -166,8 +166,13 @@ class Step(ModelSQL, ModelView):
     name = fields.Char('Name', required=True)
     description = fields.Text('Description')
     sequence = fields.Integer('Sequence')
-    inputs = fields.One2Many('production.bom.input', 'step', 'Inputs')
-    outputs = fields.One2Many('production.bom.output', 'step', 'Outputs')
+    inputs = fields.One2Many('production.bom.input', 'step', 'Inputs', order=[
+            ('step_sequence', 'ASC'),
+            ])
+    outputs = fields.One2Many('production.bom.output', 'step', 'Outputs',
+        order=[
+            ('step_sequence', 'ASC'),
+            ])
     operations = fields.One2Many('production.route.operation', 'step',
         'Operations',
         context={
@@ -220,6 +225,7 @@ class Step(ModelSQL, ModelView):
 
 class BOMMixin:
     step = fields.Many2One('production.process.step', 'Step')
+    step_sequence = fields.Integer('Step Sequence')
 
     @classmethod
     def create(cls, vlist):

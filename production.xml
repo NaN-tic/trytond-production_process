@@ -83,20 +83,28 @@
             <field name="perm_delete" eval="True"/>
         </record>
 
-
-        <!-- bom -->
+        <!-- production -->
         <record model="ir.ui.view" id="production_view_form">
             <field name="model">production</field>
             <field name="type">form</field>
             <field name="name">production_form</field>
             <field name="inherit" ref="production.production_view_form"/>
         </record>
+
+        <!-- production.bom.input -->
         <record model="ir.ui.view" id="bom_input_view_list">
             <field name="model">production.bom.input</field>
             <field name="type">tree</field>
             <field name="inherit" ref="production.bom_input_view_list"/>
             <field name="name">bom_input_list</field>
         </record>
+
+        <record model="ir.ui.view" id="bom_input_view_list_sequence">
+            <field name="model">production.bom.input</field>
+            <field name="type">tree</field>
+            <field name="name">bom_input_list_sequence</field>
+        </record>
+
         <record model="ir.ui.view" id="bom_input_view_form">
             <field name="model">production.bom.input</field>
             <field name="type">form</field>
@@ -104,12 +112,20 @@
             <field name="name">bom_input_form</field>
         </record>
 
+        <!-- production.bom.output -->
         <record model="ir.ui.view" id="bom_output_view_list">
             <field name="model">production.bom.output</field>
             <field name="type">tree</field>
             <field name="inherit" ref="production.bom_output_view_list"/>
             <field name="name">bom_output_list</field>
         </record>
+
+        <record model="ir.ui.view" id="bom_output_view_list_sequence">
+            <field name="model">production.bom.output</field>
+            <field name="type">tree</field>
+            <field name="name">bom_output_list_sequence</field>
+        </record>
+
         <record model="ir.ui.view" id="bom_output_view_form">
             <field name="model">production.bom.output</field>
             <field name="type">form</field>

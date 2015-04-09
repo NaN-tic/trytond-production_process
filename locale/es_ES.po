@@ -30,9 +30,17 @@ msgctxt "field:production.bom.input,step:"
 msgid "Step"
 msgstr "Paso"
 
+msgctxt "field:production.bom.input,step_sequence:"
+msgid "Step Sequence"
+msgstr "Órden en el paso"
+
 msgctxt "field:production.bom.output,step:"
 msgid "Step"
 msgstr "Paso"
+
+msgctxt "field:production.bom.output,step_sequence:"
+msgid "Step Sequence"
+msgstr "Órden en el paso"
 
 msgctxt "field:production.process,active:"
 msgid "Active"
@@ -154,6 +162,10 @@ msgctxt "field:production.route.operation,step:"
 msgid "Step"
 msgstr "Paso"
 
+msgctxt "field:stock.move,production_step:"
+msgid "Process"
+msgstr "Proceso"
+
 msgctxt "model:ir.action,name:act_production_process"
 msgid "Production Process"
 msgstr "Proceso de producción"
@@ -173,6 +185,14 @@ msgstr "Proceso de producción"
 msgctxt "model:production.process.step,name:"
 msgid "Production Process Step"
 msgstr "Paso de proceso de producción"
+
+msgctxt "view:production.bom.input:"
+msgid "BOM Inputs"
+msgstr "Entradas lista de material"
+
+msgctxt "view:production.bom.output:"
+msgid "BOM Outputs"
+msgstr "Salidas lista de material"
 
 msgctxt "view:production.process.step:"
 msgid "Description"

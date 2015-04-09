@@ -12,8 +12,10 @@
             <field name="description" colspan="4"/>
         </page>
         <page string="Products" id="products">
-            <field name="inputs" colspan="2"/>
-            <field name="outputs" colspan="2"/>
+            <field name="inputs" colspan="2"
+                view_ids="production_process.bom_input_view_list_sequence"/>
+            <field name="outputs" colspan="2"
+                view_ids="production_process.bom_output_view_list_sequence"/>
         </page>
         <page string="Operations" id="operations">
             <field name="operations" colspan="4"/>
