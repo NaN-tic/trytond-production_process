@@ -35,11 +35,9 @@ class ProductBom:
 
     @fields.depends('process', 'bom', 'route')
     def on_change_process(self):
-        res = {}
         if self.process:
-            res['bom'] = self.process.bom.id
-            res['route'] = self.process.route.id
-        return res
+            self.bom = self.process.bom
+            self.route = self.process.route
 
     @classmethod
     def create(cls, vlist):

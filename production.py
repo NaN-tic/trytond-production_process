@@ -369,15 +369,11 @@ class Production:
 
     @fields.depends(*(BOM_CHANGES + ['process', 'route', 'operations']))
     def on_change_process(self):
-        res = {}
         if self.process:
             self.bom = self.process.bom
-            res['bom'] = self.bom.id
             self.route = self.process.route
-            res['route'] = self.route.id
-            res.update(self.update_operations())
-            res.update(self.explode_bom())
-        return res
+            self.on_change_route()
+            self.explode_bom()
 
     @classmethod
     def compute_request(cls, product, warehouse, quantity, date, company):
