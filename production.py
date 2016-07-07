@@ -386,10 +386,10 @@ class Production:
 
     def _explode_move_values(self, from_location, to_location, company,
             bom_io, quantity):
-        res = super(Production, self)._explode_move_values(from_location,
+        move = super(Production, self)._explode_move_values(from_location,
             to_location, company, bom_io, quantity)
-        res['production_step'] = bom_io.step.id if bom_io.step else None
-        return res
+        move.production_step = bom_io.step.id if bom_io.step else None
+        return move
 
 
 class StockMove:
