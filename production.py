@@ -348,7 +348,8 @@ class Production:
             ('output_products', '=', Eval('product', 0)),
             ],
         states={
-            'readonly': ~Eval('state').in_(['request', 'draft']),
+            'readonly': (~Eval('state').in_(['request', 'draft'])
+                | ~Eval('warehouse', 0) | ~Eval('location', 0)),
             'invisible': ~Eval('product'),
             },
         depends=['product', 'state', 'warehouse', 'location'])
@@ -356,8 +357,9 @@ class Production:
     @classmethod
     def __setup__(cls):
         super(Production, cls).__setup__()
+        bom_readonly = cls.bom.states['readonly']
         cls.bom.states.update({
-                'readonly': Bool(Eval('process')),
+                'readonly': bom_readonly | Bool(Eval('process')),
                 })
         cls.bom.depends.append('process')
         cls.quantity.states['required'] |= Bool(Eval('process'))
