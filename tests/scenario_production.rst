@@ -2,31 +2,20 @@
 Production Scenario
 ===================
 
-=============
-General Setup
-=============
-
 Imports::
 
     >>> import datetime
     >>> from dateutil.relativedelta import relativedelta
     >>> from decimal import Decimal
     >>> from proteus import config, Model, Wizard
+    >>> from trytond.tests.tools import activate_modules
     >>> from trytond.modules.company.tests.tools import create_company, \
     ...     get_company
     >>> today = datetime.date.today()
 
-Create database::
+Activate production_process::
 
-    >>> config = config.set_trytond()
-    >>> config.pool.test = True
-
-Install production Module::
-
-    >>> Module = Model.get('ir.module')
-    >>> modules = Module.find([('name', '=', 'production_process')])
-    >>> Module.install([x.id for x in modules], config.context)
-    >>> Wizard('ir.module.install_upgrade').execute('upgrade')
+    >>> config = activate_modules('production_process')
 
 Create company::
 
@@ -47,41 +36,39 @@ Create product::
     >>> unit, = ProductUom.find([('name', '=', 'Unit')])
     >>> ProductTemplate = Model.get('product.template')
     >>> Product = Model.get('product.product')
-    >>> product = Product()
     >>> template = ProductTemplate()
     >>> template.name = 'product'
     >>> template.default_uom = unit
     >>> template.type = 'goods'
+    >>> template.producible = True
     >>> template.list_price = Decimal(30)
-    >>> template.cost_price = Decimal(20)
     >>> template.save()
-    >>> product.template = template
+    >>> product, = template.products
+    >>> template.cost_price = Decimal(20)
     >>> product.save()
 
 Create Components::
 
-    >>> component1 = Product()
     >>> template1 = ProductTemplate()
     >>> template1.name = 'component 1'
     >>> template1.default_uom = unit
     >>> template1.type = 'goods'
     >>> template1.list_price = Decimal(5)
-    >>> template1.cost_price = Decimal(1)
     >>> template1.save()
-    >>> component1.template = template1
+    >>> component1, = template1.products
+    >>> component1.cost_price = Decimal(1)
     >>> component1.save()
 
     >>> meter, = ProductUom.find([('name', '=', 'Meter')])
     >>> centimeter, = ProductUom.find([('name', '=', 'centimeter')])
-    >>> component2 = Product()
     >>> template2 = ProductTemplate()
     >>> template2.name = 'component 2'
     >>> template2.default_uom = meter
     >>> template2.type = 'goods'
     >>> template2.list_price = Decimal(7)
-    >>> template2.cost_price = Decimal(5)
     >>> template2.save()
-    >>> component2.template = template2
+    >>> component2, = template2.products
+    >>> component2.cost_price = Decimal(5)
     >>> component2.save()
 
 Create work centers and operation types::
@@ -250,17 +237,17 @@ Make a production::
     >>> output.state
     u'done'
     >>> config._context['locations'] = [storage.id]
-    >>> product.reload()
+    >>> product = Product(product.id)
     >>> product.quantity == 2
     True
 
 Bom and routes can not be deleted because they are linked to process::
 
-    >>> process.route.delete()
+    >>> process.route.delete()   # doctest: +IGNORE_EXCEPTION_DETAIL
     Traceback (most recent call last):
         ...
-    UserError: ('UserError', (u'Route "Assembly components" cannot be removed because it was created by process "Assembly components".', ''))
-    >>> process.bom.delete()
+    UserError: Route "Assembly components" cannot be removed because it was created by process "Assembly components".
+    >>> process.bom.delete()     # doctest: +IGNORE_EXCEPTION_DETAIL
     Traceback (most recent call last):
         ...
-    UserError: ('UserError', (u'BOM "Assembly components" cannot be removed because it was created by process "Assembly components".', ''))
+    UserError: BOM "Assembly components" cannot be removed because it was created by process "Assembly components".
