@@ -200,7 +200,7 @@ Create an Inventory::
     >>> inventory.save()
     >>> Inventory.confirm([inventory.id], config.context)
     >>> inventory.state
-    u'done'
+    'done'
 
 Make a production::
 
@@ -235,7 +235,7 @@ Make a production::
     >>> production.reload()
     >>> output, = production.outputs
     >>> output.state
-    u'done'
+    'done'
     >>> config._context['locations'] = [storage.id]
     >>> product = Product(product.id)
     >>> product.quantity == 2

@@ -1,4 +1,4 @@
-from itertools import izip
+
 from trytond.model import ModelSQL, ModelView, fields
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Bool, Eval
@@ -8,7 +8,6 @@ from trytond.transaction import Transaction
 
 __all__ = ['Process', 'Step', 'BOMInput', 'BOMOutput', 'Operation', 'BOM',
     'Route', 'Production', 'StockMove']
-__metaclass__ = PoolMeta
 
 
 class Process(ModelSQL, ModelView):
@@ -90,7 +89,7 @@ class Process(ModelSQL, ModelView):
         if without_boms:
             boms = BOM.create(boms_to_create)
             routes = Route.create(routes_to_create)
-            for values, bom, route in izip(without_boms, boms, routes):
+            for values, bom, route in zip(without_boms, boms, routes):
                 values['bom'] = bom.id
                 values['route'] = route.id
         return super(Process, cls).create(with_boms + without_boms)
@@ -223,7 +222,7 @@ class Step(ModelSQL, ModelView):
         return res
 
 
-class BOMMixin:
+class BOMMixin(metaclass=PoolMeta):
     step = fields.Many2One('production.process.step', 'Step')
     step_sequence = fields.Integer('Step Sequence')
 
@@ -245,7 +244,7 @@ class BOMOutput(BOMMixin):
     __name__ = 'production.bom.output'
 
 
-class Operation:
+class Operation(metaclass=PoolMeta):
     __name__ = 'production.route.operation'
     step = fields.Many2One('production.process.step', 'Step')
 
@@ -289,7 +288,7 @@ class Operation:
                 return step.process.route.id
 
 
-class BOM:
+class BOM(metaclass=PoolMeta):
     __name__ = 'production.bom'
 
     @classmethod
@@ -314,7 +313,7 @@ class BOM:
         super(BOM, cls).delete(boms)
 
 
-class Route:
+class Route(metaclass=PoolMeta):
     __name__ = 'production.route'
 
     @classmethod
@@ -340,7 +339,7 @@ class Route:
         super(Route, cls).delete(routes)
 
 
-class Production:
+class Production(metaclass=PoolMeta):
     __name__ = 'production'
 
     process = fields.Many2One('production.process', 'Process',
@@ -394,7 +393,7 @@ class Production:
         return move
 
 
-class StockMove:
+class StockMove(metaclass=PoolMeta):
     __name__ = 'stock.move'
 
     production_step = fields.Many2One('production.process.step', 'Process')

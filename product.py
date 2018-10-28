@@ -5,10 +5,9 @@ from trytond.pyson import Eval, Get, If, Bool
 from trytond.pool import Pool, PoolMeta
 
 __all__ = ['ProductBom']
-__metaclass__ = PoolMeta
 
 
-class ProductBom:
+class ProductBom(metaclass=PoolMeta):
     __name__ = 'product.product-production.bom'
 
     process = fields.Many2One('production.process', 'Process',
