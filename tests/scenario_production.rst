@@ -115,23 +115,18 @@ Create a process definition::
     >>> process = Process()
     >>> process.name = 'Assembly components'
     >>> process.uom =  unit
-    >>> step1 = Step()
-    >>> process.steps.append(step1)
+    >>> step1 = process.steps.new()
     >>> step1.name = 'First step'
-    >>> input1 = BOMInput()
-    >>> step1.inputs.append(input1)
+    >>> input1 = step1.inputs.new()
     >>> input1.product = component1
     >>> input1.quantity = 5
-    >>> input2 = BOMInput()
-    >>> step2 = Step()
-    >>> process.steps.append(step2)
-    >>> step2.inputs.append(input2)
+    >>> step2 = process.steps.new()
+    >>> input2 = step2.inputs.new()
     >>> step2.name = 'Second step'
     >>> input2.product = component2
     >>> input2.quantity = 150
     >>> input2.uom = centimeter
-    >>> route_operation = RouteOperation()
-    >>> step2.operations.append(route_operation)
+    >>> route_operation = step2.operations.new()
     >>> route_operation.sequence = 1
     >>> route_operation.operation_type = assembly
     >>> route_operation.work_center_category = category
@@ -139,15 +134,12 @@ Create a process definition::
     >>> route_operation.time = 1
     >>> route_operation.quantity = 3
     >>> route_operation.quantity_uom = unit
-    >>> step3 = Step()
-    >>> process.steps.append(step3)
+    >>> step3 = process.steps.new()
     >>> step3.name = 'Third step'
-    >>> output = BOMOutput()
-    >>> step3.outputs.append(output)
+    >>> output = step3.outputs.new()
     >>> output.product = product
     >>> output.quantity = 1
-    >>> route_operation = RouteOperation()
-    >>> step3.operations.append(route_operation)
+    >>> route_operation = step3.operations.new()
     >>> route_operation.sequence = 2
     >>> route_operation.operation_type = cleaning
     >>> route_operation.calculation = 'fixed'
