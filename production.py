@@ -4,6 +4,8 @@ from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Bool, Eval
 from trytond.modules.production.production import BOM_CHANGES
 from trytond.transaction import Transaction
+from trytond.i18n import gettext
+from trytond.exceptions import UserError
 
 
 __all__ = ['Process', 'Step', 'BOMInput', 'BOMOutput', 'Operation', 'BOM',
@@ -292,38 +294,20 @@ class BOM(metaclass=PoolMeta):
     __name__ = 'production.bom'
 
     @classmethod
-    def __setup__(cls):
-        super(BOM, cls).__setup__()
-        cls._error_messages.update({
-                'cannot_delete_with_process': ('BOM "%(bom)s" cannot be '
-                    'removed because it was created by process '
-                    '"%(process)s".'),
-                })
-
-    @classmethod
     def delete(cls, boms):
         Process = Pool().get('production.process')
         processes = Process.search([('bom', 'in', [x.id for x in boms])],
             limit=1)
         if processes:
-            cls.raise_user_error('cannot_delete_with_process', {
-                    'bom': processes[0].bom.rec_name,
-                    'process': processes[0].rec_name,
-                    })
+            raise UserError(gettext(
+                'production_process.cannot_delete_with_process',
+                    bom=processes[0].bom.rec_name,
+                    process=processes[0].rec_name))
         super(BOM, cls).delete(boms)
 
 
 class Route(metaclass=PoolMeta):
     __name__ = 'production.route'
-
-    @classmethod
-    def __setup__(cls):
-        super(Route, cls).__setup__()
-        cls._error_messages.update({
-                'cannot_delete_with_process': ('Route "%(route)s" cannot be '
-                    'removed because it was created by process '
-                    '"%(process)s".'),
-                })
 
     @classmethod
     def delete(cls, routes):
@@ -332,10 +316,10 @@ class Route(metaclass=PoolMeta):
             limit=1)
         if processes:
             process, = processes
-            cls.raise_user_error('cannot_delete_with_process', {
-                    'route': process.route.rec_name,
-                    'process': process.rec_name,
-                    })
+            raise UserError(gettext(
+                'production_process.cannot_delete_with_process_route',
+                    route=process.route.rec_name,
+                    process=process.rec_name))
         super(Route, cls).delete(routes)
 
 
