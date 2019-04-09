@@ -1,22 +1,6 @@
-# 
+#
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
-
-msgctxt "error:production.bom:"
-msgid ""
-"BOM \"%(bom)s\" cannot be removed because it was created by process "
-"\"%(process)s\"."
-msgstr ""
-"La lista de material \"%(bom)s\" no se puede eliminar porqué ha sido creada "
-"por el proceso \"%(process)s\"."
-
-msgctxt "error:production.route:"
-msgid ""
-"Route \"%(route)s\" cannot be removed because it was created by process "
-"\"%(process)s\"."
-msgstr ""
-"La ruta \"%(route)s\" no se puede eliminar porqué ha sido creada por el "
-"proceso \"%(process)s\"."
 
 msgctxt "field:product.product-production.bom,process:"
 msgid "Process"
@@ -60,7 +44,7 @@ msgstr "Usuario de creación"
 
 msgctxt "field:production.process,id:"
 msgid "ID"
-msgstr "Identificador"
+msgstr "ID"
 
 msgctxt "field:production.process,inputs:"
 msgid "Inputs"
@@ -83,7 +67,7 @@ msgid "Outputs"
 msgstr "Salidas"
 
 msgctxt "field:production.process,rec_name:"
-msgid "Name"
+msgid "Record Name"
 msgstr "Nombre"
 
 msgctxt "field:production.process,route:"
@@ -100,11 +84,11 @@ msgstr "UdM"
 
 msgctxt "field:production.process,write_date:"
 msgid "Write Date"
-msgstr "Fecha modificación"
+msgstr "Fecha de modificación"
 
 msgctxt "field:production.process,write_uid:"
 msgid "Write User"
-msgstr "Usuario modificación"
+msgstr "Usuario de modificación"
 
 msgctxt "field:production.process.step,create_date:"
 msgid "Create Date"
@@ -120,7 +104,7 @@ msgstr "Descripción"
 
 msgctxt "field:production.process.step,id:"
 msgid "ID"
-msgstr "Identificador"
+msgstr "ID"
 
 msgctxt "field:production.process.step,inputs:"
 msgid "Inputs"
@@ -143,7 +127,7 @@ msgid "Process"
 msgstr "Proceso"
 
 msgctxt "field:production.process.step,rec_name:"
-msgid "Name"
+msgid "Record Name"
 msgstr "Nombre"
 
 msgctxt "field:production.process.step,sequence:"
@@ -152,11 +136,11 @@ msgstr "Secuencia"
 
 msgctxt "field:production.process.step,write_date:"
 msgid "Write Date"
-msgstr "Fecha modificación"
+msgstr "Fecha de modificación"
 
 msgctxt "field:production.process.step,write_uid:"
 msgid "Write User"
-msgstr "Usuario modificación"
+msgstr "Usuario de modificación"
 
 msgctxt "field:production.route.operation,step:"
 msgid "Step"
@@ -173,6 +157,22 @@ msgstr "Proceso de producción"
 msgctxt "model:ir.action,name:act_production_process_step"
 msgid "Production Process Step"
 msgstr "Paso de proceso de producción"
+
+msgctxt "model:ir.message,text:cannot_delete_with_process"
+msgid ""
+"BOM \"%(bom)s\" cannot be removed because it was created by process "
+"\"%(process)s\"."
+msgstr ""
+"La lista de materiales \"%(bom)s\" no se puede eliminar porque fue creada "
+"por el proceso \"%(process)s\"."
+
+msgctxt "model:ir.message,text:cannot_delete_with_process_route"
+msgid ""
+"Route \"%(route)s\" cannot be removed because it was created by process "
+"\"%(process)s\"."
+msgstr ""
+"La ruta \"%(route)s\" no se puede eliminar porque fue creada por el proceso "
+"\"%(process)s\"."
 
 msgctxt "model:ir.ui.menu,name:menu_production_process"
 msgid "Processes"
