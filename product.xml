@@ -5,21 +5,18 @@
     <data>
         <record model="ir.ui.view" id="product-bom_view_list">
             <field name="model">product.product-production.bom</field>
-            <field name="type" eval="None"/>
             <field name="inherit" ref="production.product-bom_view_list"/>
             <field name="name">product_bom_list</field>
         </record>
 
         <record model="ir.ui.view" id="product-bom_view_list_sequence">
             <field name="model">product.product-production.bom</field>
-            <field name="type" eval="None"/>
             <field name="inherit" ref="production.product-bom_view_list_sequence"/>
             <field name="name">product_bom_list_sequence</field>
         </record>
 
         <record model="ir.ui.view" id="product-bom_view_form">
             <field name="model">product.product-production.bom</field>
-            <field name="type" eval="None"/>
             <field name="inherit" ref="production.product-bom_view_form"/>
             <field name="name">product_bom_form</field>
         </record>
