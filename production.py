@@ -352,7 +352,8 @@ class Production(metaclass=PoolMeta):
                 })
         cls.route.depends.append('process')
 
-    @fields.depends(*(BOM_CHANGES + ['process', 'route', 'operations']))
+    @fields.depends(*(BOM_CHANGES + ['process', 'route', 'operations']),
+        methods=['on_change_route', 'explode_bom'])
     def on_change_process(self):
         if self.process:
             self.bom = self.process.bom
