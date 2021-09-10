@@ -1,5 +1,5 @@
 
-from trytond.model import ModelSQL, ModelView, fields
+from trytond.model import ModelSQL, ModelView, DeactivableMixin, fields
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Bool, Eval
 from trytond.modules.production.production import BOM_CHANGES
@@ -12,7 +12,7 @@ __all__ = ['Process', 'Step', 'BOMInput', 'BOMOutput', 'Operation', 'BOM',
     'Route', 'Production', 'StockMove']
 
 
-class Process(ModelSQL, ModelView):
+class Process(DeactivableMixin, ModelSQL, ModelView):
     'Production Process'
     __name__ = 'production.process'
     name = fields.Char('Name', required=True)
@@ -32,11 +32,6 @@ class Process(ModelSQL, ModelView):
     operations = fields.Function(fields.One2Many('production.route.operation',
             None, 'Operations'), 'get_operations')
     uom = fields.Many2One('product.uom', 'UOM', required=True)
-    active = fields.Boolean('Active', select=True)
-
-    @staticmethod
-    def default_active():
-        return True
 
     def get_bom_field(self, name):
         res = []
