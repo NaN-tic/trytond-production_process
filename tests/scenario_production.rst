@@ -60,7 +60,7 @@ Create Components::
     >>> component1.save()
 
     >>> meter, = ProductUom.find([('name', '=', 'Meter')])
-    >>> centimeter, = ProductUom.find([('name', '=', 'centimeter')])
+    >>> centimeter, = ProductUom.find([('symbol', '=', 'cm')])
     >>> template2 = ProductTemplate()
     >>> template2.name = 'component 2'
     >>> template2.default_uom = meter
