@@ -8,6 +8,10 @@
     <field name="active"/>
     <label name="uom"/>
     <field name="uom"/>
+    <label name="bom"/>
+    <field name="bom"/>
+    <label name="route"/>
+    <field name="route"/>
     <notebook colspan="4">
         <page string="Steps" id="steps">
             <field name="steps" colspan="4"/>
