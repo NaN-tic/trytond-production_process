@@ -18,10 +18,17 @@ class Process(DeactivableMixin, ModelSQL, ModelView):
     name = fields.Char('Name', required=True)
     steps = fields.One2Many('production.process.step', 'process', 'Steps',
         context={
-            'from_process': Eval('id'),
-            },)
+            'from_route': Eval('route'),
+        },
+        states={
+            'readonly': ~Eval('route'),
+        }, depends=['route'])
     bom = fields.Many2One('production.bom', 'BOM', required=True)
-    route = fields.Many2One('production.route', 'Route', required=True)
+    route = fields.Many2One('production.route', 'Route', required=True,
+        states={
+            'readonly': Bool(Eval('steps', [0])),
+            },
+        depends=['steps'])
     inputs = fields.Function(fields.One2Many('production.bom.input', None,
             'Inputs'), 'get_bom_field')
     outputs = fields.Function(fields.One2Many('production.bom.output', None,
@@ -248,15 +255,20 @@ class Operation(metaclass=PoolMeta):
     @classmethod
     def __setup__(cls):
         super(Operation, cls).__setup__()
+
         if not cls.route.states:
             cls.route.states = {}
-        new_invisible = Eval('context', {}).get('from_step', 0) != 0
-        old_invisible = cls.route.states.get('invisible')
-        if old_invisible:
-            new_invisible = new_invisible | old_invisible
+        new_readonly = Eval('context', {}).get('from_route', 0) != 0
+        readonly = cls.route.states.get('readonly')
+        if readonly:
+            new_readonly = new_readonly | readonly
         cls.route.states.update({
-                'invisible': new_invisible,
+                'readonly': new_readonly,
                 })
+
+    @staticmethod
+    def default_route():
+        return Transaction().context.get('from_route')
 
     @classmethod
     def create(cls, vlist):
@@ -266,23 +278,6 @@ class Operation(metaclass=PoolMeta):
             if not values.get('route') and values.get('step'):
                 values['route'] = Step(values['step']).process.route.id
         return super(Operation, cls).create(vlist)
-
-    @staticmethod
-    def default_route():
-        pool = Pool()
-        Process = pool.get('production.process')
-        Step = pool.get('production.process.step')
-
-        process_id = Transaction().context.get('from_process')
-        if process_id and process_id > 0:
-            process = Process(process_id)
-            return process.route.id
-
-        step_id = Transaction().context.get('from_step')
-        if step_id and step_id > 0:
-            step = Step(step_id)
-            if step.process:
-                return step.process.route.id
 
 
 class BOM(metaclass=PoolMeta):
