@@ -30,9 +30,9 @@ class Process(DeactivableMixin, ModelSQL, ModelView):
             },
         depends=['steps'])
     inputs = fields.Function(fields.One2Many('production.bom.input', None,
-            'Inputs'), 'get_bom_field')
+            'Inputs'), 'get_bom_field', setter='_set_bom_field')
     outputs = fields.Function(fields.One2Many('production.bom.output', None,
-            'Outputs'), 'get_bom_field')
+            'Outputs'), 'get_bom_field', setter='_set_bom_field')
     output_products = fields.Function(fields.Many2Many('production.bom.output',
             'bom', 'product', 'Outputs'), 'get_bom_field',
         searcher='search_bom_field')
@@ -45,6 +45,11 @@ class Process(DeactivableMixin, ModelSQL, ModelView):
         if self.bom:
             res += [x.id for x in getattr(self.bom, name)]
         return res
+
+    @classmethod
+    def _set_bom_field(cls, processes, name, value):
+        # Prevent NotImplementedError for One2Many
+        pass
 
     def get_operations(self, name):
         res = []
