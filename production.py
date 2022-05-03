@@ -339,13 +339,13 @@ class Production(metaclass=PoolMeta):
         cls.bom.states.update({
                 'readonly': bom_readonly | Bool(Eval('process')),
                 })
-        cls.bom.depends.append('process')
+        cls.bom.depends.add('process')
         cls.quantity.states['required'] |= Bool(Eval('process'))
         cls.quantity.states['invisible'] &= ~Eval('process')
         cls.route.states.update({
                 'readonly': Bool(Eval('process')),
                 })
-        cls.route.depends.append('process')
+        cls.route.depends.add('process')
 
     @fields.depends(*(BOM_CHANGES + ['process', 'route', 'operations']),
         methods=['on_change_route', 'explode_bom'])

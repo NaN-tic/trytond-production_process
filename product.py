@@ -25,12 +25,12 @@ class ProductBom(metaclass=PoolMeta):
             cls.bom.states.update({
                     'readonly': Bool(Eval('process', 0)),
                     })
-            cls.bom.depends.append('process')
+            cls.bom.depends.add('process')
         if not 'process' in cls.route.depends:
             cls.route.states.update({
                     'readonly': Bool(Eval('process', 0)),
                     })
-            cls.route.depends.append('process')
+            cls.route.depends.add('process')
 
     @fields.depends('process', 'bom', 'route')
     def on_change_process(self):
