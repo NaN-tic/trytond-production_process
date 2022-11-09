@@ -11,7 +11,7 @@ class ProductBom(metaclass=PoolMeta):
     __name__ = 'product.product-production.bom'
 
     process = fields.Many2One('production.process', 'Process',
-        select=True, domain=[
+        domain=[
             ('output_products', '=', If(Bool(Eval('product')),
                     Eval('product', 0),
                     Get(Eval('_parent_product', {}), 'id', 0))),
