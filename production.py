@@ -2,7 +2,6 @@
 from trytond.model import ModelSQL, ModelView, DeactivableMixin, fields
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Bool, Eval
-from trytond.modules.production.production import BOM_CHANGES
 from trytond.transaction import Transaction
 from trytond.i18n import gettext
 from trytond.exceptions import UserError
@@ -347,8 +346,7 @@ class Production(metaclass=PoolMeta):
                 })
         cls.route.depends.add('process')
 
-    @fields.depends(*(BOM_CHANGES + ['process', 'route', 'operations']),
-        methods=['on_change_route', 'explode_bom'])
+    @fields.depends('process', methods=['on_change_route', 'explode_bom'])
     def on_change_process(self):
         if self.process:
             self.bom = self.process.bom
@@ -366,10 +364,8 @@ class Production(metaclass=PoolMeta):
             production.process = product.boms[0].process
         return production
 
-    def _explode_move_values(self, from_location, to_location, company,
-            bom_io, quantity):
-        move = super(Production, self)._explode_move_values(from_location,
-            to_location, company, bom_io, quantity)
+    def _explode_move_values(self, type, bom_io, quantity):
+        move = super(Production, self)._explode_move_values(type, bom_io, quantity)
         move.production_step = bom_io.step.id if bom_io.step else None
         return move
 
