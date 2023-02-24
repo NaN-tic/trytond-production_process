@@ -218,7 +218,6 @@ Make a production::
     True
     >>> Production.wait([production.id], config.context)
     >>> Production.assign_try([production.id], config.context)
-    True
     >>> Production.run([production.id], config.context)
     >>> operations = [o.id for o in production.operations]
     >>> Operation.run(operations, config.context)
