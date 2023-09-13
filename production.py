@@ -240,7 +240,7 @@ class BOMMixin(metaclass=PoolMeta):
         Step = pool.get('production.process.step')
         for values in vlist:
             if not values.get('bom') and values.get('step'):
-                values['bom'] = Step(values['step']).process.bom.id
+                values['unit'] = Step(values['step']).process.bom.id
         return super(BOMMixin, cls).create(vlist)
 
 

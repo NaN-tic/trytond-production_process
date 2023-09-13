@@ -125,7 +125,7 @@ Create a process definition::
     >>> step2.name = 'Second step'
     >>> input2.product = component2
     >>> input2.quantity = 150
-    >>> input2.uom = centimeter
+    >>> input2.unit = centimeter
     >>> route_operation = step2.operations.new()
     >>> route_operation.sequence = 1
     >>> route_operation.operation_type = assembly
