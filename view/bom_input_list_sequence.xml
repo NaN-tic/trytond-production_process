@@ -4,5 +4,5 @@
 <tree sequence="step_sequence">
     <field name="product"/>
     <field name="quantity"/>
-    <field name="uom"/>
+    <field name="unit"/>
 </tree>
