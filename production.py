@@ -77,6 +77,7 @@ class Process(DeactivableMixin, ModelSQL, ModelView):
         BOM = pool.get('production.bom')
         Route = pool.get('production.route')
 
+        vlist = [x.copy() for x in vlist]
         boms_to_create = []
         routes_to_create = []
         with_boms = []
@@ -238,6 +239,7 @@ class BOMMixin(metaclass=PoolMeta):
     def create(cls, vlist):
         pool = Pool()
         Step = pool.get('production.process.step')
+        vlist = [x.copy() for x in vlist]
         for values in vlist:
             if not values.get('bom') and values.get('step'):
                 values['bom'] = Step(values['step']).process.bom.id
@@ -278,6 +280,7 @@ class Operation(metaclass=PoolMeta):
     def create(cls, vlist):
         pool = Pool()
         Step = pool.get('production.process.step')
+        vlist = [x.copy() for x in vlist]
         for values in vlist:
             if not values.get('route') and values.get('step'):
                 values['route'] = Step(values['step']).process.route.id
