@@ -42,6 +42,7 @@ class ProductBom(metaclass=PoolMeta):
     def create(cls, vlist):
         pool = Pool()
         Process = pool.get('production.process')
+        vlist = [x.copy() for x in vlist]
         for values in vlist:
             if values.get('process'):
                 process = Process(values['process'])
