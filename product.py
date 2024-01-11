@@ -15,8 +15,7 @@ class ProductBom(metaclass=PoolMeta):
             ('output_products', '=', If(Bool(Eval('product')),
                     Eval('product', 0),
                     Get(Eval('_parent_product', {}), 'id', 0))),
-            ],
-        depends=['product'])
+            ])
 
     @classmethod
     def __setup__(cls):

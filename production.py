@@ -26,8 +26,7 @@ class Process(DeactivableMixin, ModelSQL, ModelView):
     route = fields.Many2One('production.route', 'Route', required=True,
         states={
             'readonly': Bool(Eval('steps', [0])),
-            },
-        depends=['steps'])
+            })
     inputs = fields.Function(fields.One2Many('production.bom.input', None,
             'Inputs'), 'get_bom_field', setter='_set_bom_field')
     outputs = fields.Function(fields.One2Many('production.bom.output', None,
@@ -331,8 +330,7 @@ class Production(metaclass=PoolMeta):
             'readonly': (~Eval('state').in_(['request', 'draft'])
                 | ~Eval('warehouse', 0) | ~Eval('location', 0)),
             'invisible': ~Eval('product'),
-            },
-        depends=['product', 'state', 'warehouse', 'location'])
+            })
 
     @classmethod
     def __setup__(cls):
