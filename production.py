@@ -21,7 +21,7 @@ class Process(DeactivableMixin, ModelSQL, ModelView):
         },
         states={
             'readonly': ~Eval('route'),
-        }, depends=['route'])
+        })
     bom = fields.Many2One('production.bom', 'BOM', required=True)
     route = fields.Many2One('production.route', 'Route', required=True,
         states={
