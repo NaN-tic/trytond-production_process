@@ -222,7 +222,7 @@ Make a production::
     >>> operations = [o.id for o in production.operations]
     >>> Operation.run(operations, config.context)
     >>> Operation.done(operations, config.context)
-    >>> Production.done([production.id], config.context)
+    >>> Production.do([production.id], config.context)
     >>> production.reload()
     >>> output, = production.outputs
     >>> output.state
