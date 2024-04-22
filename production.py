@@ -365,9 +365,14 @@ class Production(metaclass=PoolMeta):
             production.process = product.boms[0].process
         return production
 
-    def _explode_move_values(self, type, bom_io, quantity):
-        move = super(Production, self)._explode_move_values(type, bom_io, quantity)
-        move.production_step = bom_io.step.id if bom_io.step else None
+    def _move(self, type, product, unit, quantity):
+        move = super()._move(type, product, unit, quantity)
+        if hasattr(move, 'production_input') and move.production_input and move.production_input.bom:
+            for input in move.production_input.bom.inputs:
+                if not input.step:
+                    continue
+                if input.product == move.product:
+                    move.production_step = input.step
         return move
 
 
