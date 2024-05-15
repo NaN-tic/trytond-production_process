@@ -216,15 +216,15 @@ class Step(ModelSQL, ModelView):
             new_step, = super(Step, cls).copy([step], default=default)
             BOMInput.copy(step.inputs, {
                     'step': new_step.id,
-                    'bom': new_step.process.bom.id,
+                    'bom': new_step.process.bom.id if new_step.process else None,
                     })
             BOMOutput.copy(step.outputs, {
                     'step': new_step.id,
-                    'bom': new_step.process.bom.id,
+                    'bom': new_step.process.bom.id if new_step.process else None,
                     })
             Operation.copy(step.operations, {
                     'step': new_step.id,
-                    'route': new_step.process.route.id,
+                    'route': new_step.process.route.id if new_step.process else None,
                     })
             res.append(new_step)
         return res
