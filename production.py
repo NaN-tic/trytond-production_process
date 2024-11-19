@@ -35,7 +35,7 @@ class Process(DeactivableMixin, ModelSQL, ModelView):
             'bom', 'product', 'Outputs'), 'get_bom_field',
         searcher='search_bom_field')
     operations = fields.Function(fields.One2Many('production.route.operation',
-            None, 'Operations'), 'get_operations')
+            None, 'Operations'), 'get_operations', setter='_set_operations')
     uom = fields.Many2One('product.uom', 'UOM', required=True)
 
     def get_bom_field(self, name):
@@ -46,6 +46,11 @@ class Process(DeactivableMixin, ModelSQL, ModelView):
 
     @classmethod
     def _set_bom_field(cls, processes, name, value):
+        # Prevent NotImplementedError for One2Many
+        pass
+
+    @classmethod
+    def _set_operations(cls, processes, name, value):
         # Prevent NotImplementedError for One2Many
         pass
 
