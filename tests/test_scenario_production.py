@@ -196,8 +196,10 @@ class Test(unittest.TestCase):
         operations = [o.id for o in production.operations]
         Operation.run(operations, config.context)
         Operation.done(operations, config.context)
-        Production.do([production.id], config.context)
         production.reload()
+        if production.state == 'running':
+            Production.do([production.id], config.context)
+            production.reload()
         output, = production.outputs
         self.assertEqual(output.state, 'done')
         config._context['locations'] = [storage.id]
